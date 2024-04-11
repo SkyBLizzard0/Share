@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Record</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+    <script>
+      function Employee(id, name, city) {
+        this.id = id;
+        this.name = name;
+        this.city = city;
+      }
+
+      (e1 = new Employee(1, "John Doe", "New York")),
+        (e2 = new Employee(2, "Jane Smith", "Los Angeles")),
+        (e3 = new Employee(3, "Alice Johnson", "Chicago"));
+      employees = [e1, e2, e3];
+
+      function displayEmployee() {
+        let tableBody = document.querySelector("#employeedata tbody");
+        tableBody.innerHTML = "";
+
+        employees.forEach(function (employee, index) {
+          let row = document.createElement("tr");
+
+          let userIdCell = document.createElement("td");
+          userIdCell.textContent = employee.id;
+          row.appendChild(userIdCell);
+
+          let nameCell = document.createElement("td");
+          nameCell.textContent = employee.name;
+          row.appendChild(nameCell);
+
+          let cityCell = document.createElement("td");
+          cityCell.textContent = employee.city;
+          row.appendChild(cityCell);
+
+          let actionCell = document.createElement("td");
+          let editButton = document.createElement("button");
+          editButton.textContent = "Edit";
+          editButton.addEventListener("click", function () {
+            editEmployee(index);
+          });
+          actionCell.appendChild(editButton);
+
+          let deleteButton = document.createElement("button");
+          deleteButton.textContent = "Delete";
+          deleteButton.addEventListener("click", function () {
+            deleteEmployee(index);
+          });
+          actionCell.appendChild(deleteButton);
+
+          row.appendChild(actionCell);
+
+          tableBody.appendChild(row);
+        });
+      }
+
+      function saveEmployee() {
+        userid = document.getElementById("adduserid").value;
+        uname = document.getElementById("adduname").value;
+        city = document.getElementById("addcity").value;
+
+        employees.push(new Employee(userid, uname, city));
+        document.getElementById("adduserid").value = "";
+        document.getElementById("adduname").value = "";
+        document.getElementById("addcity").value = "";
+
+        displayEmployee();
+        toggleAddEmployee();
+      }
+
+      function toggleAddEmployee() {
+        document.getElementById("addemployee").classList.toggle("hidden");
+      }
+      function toggledeleteEmployee() {
+        document.getElementById("deleteemployee").classList.toggle("hidden");
+      }
+      function toggleEditEmployee() {
+        document.getElementById("editemployee").classList.toggle("hidden");
+      }
+
+      function deleteEmployee(index) {
+        employees.splice(index, 1);
+        displayEmployee();
+      }
+      function deleteEmployee1() {
+        userId = parseInt(document.getElementById("deleteuserid").value);
+        index = employees.findIndex(function (emp) {
+          return emp.id === userId;
+        });
+        if (index !== -1) {
+          employees.splice(index, 1);
+          displayEmployee();
+        }
+        document.getElementById("deleteuserid").value = "";
+      }
+      function editEmployee(index) {
+        employee = employees[index];
+        document.getElementById("edituserid").value = employee.id;
+        document.getElementById("edituname").value = employee.name;
+        document.getElementById("editcity").value = employee.city;
+        toggleEditEmployee();
+      }
+
+      function saveEditedEmployee() {
+        let index = document.getElementById("editindex").value;
+        let userid = parseInt(document.getElementById("edituserid").value);
+        let uname = document.getElementById("edituname").value;
+        let city = document.getElementById("editcity").value;
+
+        employees[index].id = userid;
+        employees[index].name = uname;
+        employees[index].city = city;
+
+        displayEmployee();
+        toggleEditEmployee();
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Employee Record</h1>
+    <div id="addemployee" class="hidden">
+      <h2>Add Employee</h2>
+      <label>User ID : </label> <input type="number" id="adduserid" /> <br />
+      <label>Name : </label> <input type="text" id="adduname" /> <br />
+      <label>City : </label> <input type="text" id="addcity" /> <br />
+      <button onclick="saveEmployee()">Save Employee</button>
+    </div>
+    <div id="editemployee" class="hidden">
+      <h2>Edit Employee</h2>
+      <label class="hidden">User ID : </label> <input type="number" id="edituserid" class="hidden"/>
+      <label>Name : </label> <input type="text" id="edituname" /> <br />
+      <label>City : </label> <input type="text" id="editcity" /> <br />
+      <input type="hidden" id="editindex" />
+      <button onclick="saveEditedEmployee()">Save Changes</button>
+    </div>
+    <div id="deleteemployee" class="hidden">
+      <label>Enter User ID : </label> <input type="number" id="deleteuserid" />
+      <br />
+      <button onclick="deleteEmployee1()">Delete Employee</button>
+    </div>
+    <br />
+    <button onclick="toggleAddEmployee()">Add Employee</button>
+    <br />
+    <button onclick="displayEmployee()">Display Employee</button>
+    <button onclick="toggledeleteEmployee()">Delete Employee</button>
+    <button onclick="toggleEditEmployee()">Edit Employee</button>
+
+    <table id="employeedata">
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Name</th>
+          <th>City</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </body>
+</html>
